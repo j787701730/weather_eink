@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_eink/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_eink/utils.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -188,9 +188,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     margin: EdgeInsets.only(bottom: 4),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      '${DateTime.parse(nowData['obsTime']).year}/${DateTime.parse(nowData['obsTime']).month}/'
+                      '${DateTime.parse(nowData['obsTime']).year}/'
+                      '${DateTime.parse(nowData['obsTime']).month.toString().padLeft(2, '0')}/'
                       '${DateTime.parse(nowData['obsTime']).day} '
-                      '${DateTime.parse('2020-09-28T16:15').hour}:${DateTime.parse(nowData['obsTime']).minute} 更新',
+                      '${DateTime.parse(nowData['obsTime']).hour.toString().padLeft(2, '0')}:'
+                      '${DateTime.parse(nowData['obsTime']).minute} 更新',
                       style: TextStyle(
                         fontSize: 12,
                       ),
