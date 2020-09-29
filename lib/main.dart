@@ -23,15 +23,24 @@ class MyApp extends StatelessWidget {
         title: '天气墨水屏',
         themeMode: ThemeMode.light,
         theme: ThemeData(
-          // primarySwatch: Colors.blue,
-          brightness: Brightness.light,
-          // cupertinoOverrideTheme: CupertinoThemeData(
-          //   brightness: Brightness.light,
-          // ),
-          // platform: TargetPlatform.iOS,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          scaffoldBackgroundColor: Colors.white,
-        ),
+            // primarySwatch: Colors.blue,
+            primaryColor: Colors.white,
+            brightness: Brightness.light,
+            // cupertinoOverrideTheme: CupertinoThemeData(
+            //   brightness: Brightness.light,
+            // ),
+            // platform: TargetPlatform.iOS,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            scaffoldBackgroundColor: Colors.white,
+            textTheme: TextTheme(
+              bodyText2: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+            )),
         home: MyHomePage(title: '天气墨水屏'),
         debugShowCheckedModeBanner: false,
         routes: <String, WidgetBuilder>{

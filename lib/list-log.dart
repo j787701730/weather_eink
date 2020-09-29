@@ -63,28 +63,25 @@ class _ListLogState extends State<ListLog> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          color: Colors.black,
           onPressed: () {
             Navigator.of(context).pop(change);
           },
         ),
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
         elevation: 1,
         title: Text(
           '历史记录',
-          style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
       ),
       body: ListView.separated(
-        padding: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.symmetric(vertical: 8),
         separatorBuilder: (BuildContext context, int index) {
           return Divider();
         },
         itemBuilder: (context, index) {
           Map item = cityData[index];
           return ListTile(
+            key: Key('${item['id']}'),
             title: Row(
               children: [
                 Text(item['name']),

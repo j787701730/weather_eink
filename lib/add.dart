@@ -38,7 +38,6 @@ class _AddState extends State<Add> {
       'https://geoapi.heweather.net/v2/city/lookup?location=$keyWord',
       {},
       (data) {
-        print(data);
         if (mounted) {
           if (data['code'] == '200') {
             setState(() {
@@ -60,14 +59,13 @@ class _AddState extends State<Add> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        leading: BackButton(
-          color: Colors.black,
-        ),
+        leading: BackButton(),
         elevation: 1,
         title: TextFormField(
-          decoration: InputDecoration(border: InputBorder.none, hintText: '输入城市名称'),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: '输入城市名称',
+          ),
           onChanged: (val) {
             keyWord = val;
           },
@@ -76,20 +74,20 @@ class _AddState extends State<Add> {
           IconButton(
             icon: Icon(
               Icons.search,
-              color: Colors.black,
             ),
             onPressed: search,
           )
         ],
       ),
       body: ListView.separated(
-        padding: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.symmetric(vertical: 8),
         separatorBuilder: (BuildContext context, int index) {
           return Divider();
         },
         itemBuilder: (context, index) {
           Map item = locations[index];
           return ListTile(
+            key: Key('${item['id']}'),
             title: Row(
               children: [
                 Text(item['name']),
