@@ -83,8 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mounted) {
         if (data['code'] == '200') {
           setState(() {
-            hoursData.add(data['hourly'].sublist(0, 6));
-            hoursData.add(data['hourly'].sublist(6, 12));
+            hoursData = [data['hourly'].sublist(0, 6), data['hourly'].sublist(6, 12)];
           });
         } else {
           _message('${data['code']}');
