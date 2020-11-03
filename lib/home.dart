@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (mounted) {
         if (data['code'] == '200') {
           setState(() {
-            hoursData = data['hourly'].sublist(0, 12);
+            hoursData.add(data['hourly'].sublist(0, 6));
+            hoursData.add(data['hourly'].sublist(6, 12));
           });
         } else {
           _message('${data['code']}');
@@ -136,8 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData media = MediaQuery.of(context);
-    double width = media.size.width - media.padding.left - media.padding.right - 30;
     return WillPopScope(
       child: Scaffold(
         key: _scaffoldKey,
@@ -255,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           children: [
@@ -286,24 +285,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   hoursData.isEmpty
                       ? Container()
-                      : Wrap(
-                          children: hoursData.map<Widget>((item) {
-                            return Container(
-                              key: Key(item['fxTime']),
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(bottom: 8),
-                              width: width / 6,
-                              child: Column(
-                                children: [
-                                  Text('${DateTime.parse(item['fxTime'].substring(0, 16)).hour}时'),
-                                  Image.asset(
-                                    'weather-icon-S1/bw-64/${item['icon']}.png',
-                                    width: 30,
-                                    height: 30,
+                      : Column(
+                          children: hoursData.map<Widget>((hoursDataItem) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: hoursDataItem.map<Widget>((item) {
+                                return Container(
+                                  key: Key(item['fxTime']),
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  child: Column(
+                                    children: [
+                                      Text('${DateTime.parse(item['fxTime'].substring(0, 16)).hour}时'),
+                                      Image.asset(
+                                        'weather-icon-S1/bw-64/${item['icon']}.png',
+                                        width: 30,
+                                        height: 30,
+                                      ),
+                                      Text('${item['temp']}℃'),
+                                    ],
                                   ),
-                                  Text('${item['temp']}℃'),
-                                ],
-                              ),
+                                );
+                              }).toList(),
                             );
                           }).toList(),
                         ),
