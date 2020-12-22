@@ -188,9 +188,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       '${DateTime.parse(nowData['obsTime']).year}/'
                       '${DateTime.parse(nowData['obsTime']).month.toString().padLeft(2, '0')}/'
-                      '${DateTime.parse(nowData['obsTime']).day} '
+                      '${DateTime.parse(nowData['obsTime']).day.toString().padLeft(2, '0')} '
                       '${DateTime.parse(nowData['obsTime']).hour.toString().padLeft(2, '0')}:'
-                      '${DateTime.parse(nowData['obsTime']).minute} 更新',
+                      '${DateTime.parse(nowData['obsTime']).minute.toString().padLeft(2, '0')} 更新',
                       style: TextStyle(
                         fontSize: 12,
                       ),
