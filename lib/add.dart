@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:weather_eink/scrollNoWave.dart';
 import 'utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,32 +80,34 @@ class _AddState extends State<Add> {
           )
         ],
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        separatorBuilder: (BuildContext context, int index) {
-          return Divider();
-        },
-        itemBuilder: (context, index) {
-          Map item = locations[index];
-          return ListTile(
-            key: Key('${item['id']}'),
-            title: Row(
-              children: [
-                Text(item['name']),
-                Text(
-                  '   (${item['country']} ${item['adm1']} ${item['adm2']})',
-                  style: TextStyle(
-                    fontSize: 14,
+      body: ScrollNoWave(
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider();
+          },
+          itemBuilder: (context, index) {
+            Map item = locations[index];
+            return ListTile(
+              key: Key('${item['id']}'),
+              title: Row(
+                children: [
+                  Text(item['name']),
+                  Text(
+                    '   (${item['country']} ${item['adm1']} ${item['adm2']})',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            onTap: () {
-              _cityAdd(item);
-            },
-          );
-        },
-        itemCount: locations.length,
+                ],
+              ),
+              onTap: () {
+                _cityAdd(item);
+              },
+            );
+          },
+          itemCount: locations.length,
+        ),
       ),
     );
   }

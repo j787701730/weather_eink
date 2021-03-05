@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_eink/utils.dart';
+import 'scrollNoWave.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -19,7 +20,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List sevenDayData = [];
   List hoursData = [];
   DateTime _lastQuitTime;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Map cityData = {
     'name': '福州',
     'id': 101230101,
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _message(val) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Container(
           height: 34,
@@ -138,7 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0,
           actions: [
@@ -179,178 +178,177 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         body: nowData.isNotEmpty
-            ? ListView(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 4),
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      '${DateTime.parse(nowData['obsTime']).year}/'
-                      '${DateTime.parse(nowData['obsTime']).month.toString().padLeft(2, '0')}/'
-                      '${DateTime.parse(nowData['obsTime']).day.toString().padLeft(2, '0')} '
-                      '${DateTime.parse(nowData['obsTime']).hour.toString().padLeft(2, '0')}:'
-                      '${DateTime.parse(nowData['obsTime']).minute.toString().padLeft(2, '0')} 更新',
-                      style: TextStyle(
-                        fontSize: 12,
+            ? ScrollNoWave(
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 4),
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${nowData['obsTime'].substring(0, 10)} '
+                        '${nowData['obsTime'].substring(11, 16)}'
+                        ' 更新',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${cityData['name']}',
-                      style: TextStyle(
-                        fontSize: 28,
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${cityData['name']}',
+                        style: TextStyle(
+                          fontSize: 28,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Image.asset(
-                              'weather-icon-S1/bw-64/${nowData['icon']}.png',
-                              width: 30,
-                              height: 30,
-                            ),
-                            Text(nowData['text'])
-                          ],
-                        ),
-                        Container(
-                          width: 10,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              '${nowData['temp']}℃',
-                              style: TextStyle(
-                                fontSize: 60,
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Image.asset(
+                                'weather-icon-S1/bw-64/${nowData['icon']}.png',
+                                width: 30,
+                                height: 30,
                               ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    margin: EdgeInsets.only(bottom: 8),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: Color(0xffcccccc),
-                        ),
-                        bottom: BorderSide(
-                          color: Color(0xffcccccc),
-                        ),
+                              Text(nowData['text'])
+                            ],
+                          ),
+                          Container(
+                            width: 10,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                '${nowData['temp']}℃',
+                                style: TextStyle(
+                                  fontSize: 60,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [],
+                          )
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text('相对湿度'),
-                            Text('百分之${nowData['humidity']}'),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('${nowData['windDir']}'),
-                            Text('${nowData['windScale']}级'),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('气压'),
-                            Text('${nowData['pressure']}百帕'),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text('能见度'),
-                            Text('${nowData['vis']}公里'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  hoursData.isEmpty
-                      ? Container()
-                      : Column(
-                          children: hoursData.map<Widget>((hoursDataItem) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: hoursDataItem.map<Widget>((item) {
-                                return Container(
-                                  key: Key(item['fxTime']),
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(bottom: 8),
-                                  child: Column(
-                                    children: [
-                                      Text('${DateTime.parse(item['fxTime'].substring(0, 16)).hour}时'),
-                                      Image.asset(
-                                        'weather-icon-S1/bw-64/${item['icon']}.png',
-                                        width: 30,
-                                        height: 30,
-                                      ),
-                                      Text('${item['temp']}℃'),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          }).toList(),
-                        ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: Color(0xffcccccc),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      margin: EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: Color(0xffcccccc),
+                          ),
+                          bottom: BorderSide(
+                            color: Color(0xffcccccc),
+                          ),
                         ),
                       ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              Text('相对湿度'),
+                              Text('百分之${nowData['humidity']}'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text('${nowData['windDir']}'),
+                              Text('${nowData['windScale']}级'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text('气压'),
+                              Text('${nowData['pressure']}百帕'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Text('能见度'),
+                              Text('${nowData['vis']}公里'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    padding: EdgeInsets.only(top: 4),
-                    child: sevenDayData.isEmpty
-                        ? Container()
-                        : Column(
-                            children: sevenDayData.map<Widget>((item) {
+                    if (hoursData.isNotEmpty)
+                      Column(
+                        children: hoursData.map<Widget>((hoursDataItem) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: hoursDataItem.map<Widget>((item) {
                               return Container(
-                                padding: EdgeInsets.symmetric(vertical: 2),
-                                key: Key(item['fxDate']),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                key: Key(item['fxTime']),
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.only(bottom: 8),
+                                child: Column(
                                   children: [
-                                    Container(
-                                      child: Text('${item['fxDate']}'.substring(5)),
+                                    Text('${DateTime.parse(item['fxTime'].substring(0, 16)).hour}时'),
+                                    Image.asset(
+                                      'weather-icon-S1/bw-64/${item['icon']}.png',
+                                      width: 30,
+                                      height: 30,
                                     ),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          'weather-icon-S1/bw-64/${item['iconDay']}.png',
-                                          width: 30,
-                                          height: 30,
-                                        ),
-                                        Text('${item['textDay']}')
-                                      ],
-                                    ),
-                                    Container(
-                                      child: Text('${item['tempMin']}~${item['tempMax']}℃'),
-                                    ),
+                                    Text('${item['temp']}℃'),
                                   ],
                                 ),
                               );
                             }).toList(),
+                          );
+                        }).toList(),
+                      ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: Color(0xffcccccc),
                           ),
-                  ),
-                ],
+                        ),
+                      ),
+                      padding: EdgeInsets.only(top: 4),
+                      child: sevenDayData.isEmpty
+                          ? Container()
+                          : Column(
+                              children: sevenDayData.map<Widget>((item) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(vertical: 2),
+                                  key: Key(item['fxDate']),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text('${item['fxDate']}'.substring(5)),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            'weather-icon-S1/bw-64/${item['iconDay']}.png',
+                                            width: 30,
+                                            height: 30,
+                                          ),
+                                          Text('${item['textDay']}')
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Text('${item['tempMin']}~${item['tempMax']}℃'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                    ),
+                  ],
+                ),
               )
             : Container(
                 alignment: Alignment.center,

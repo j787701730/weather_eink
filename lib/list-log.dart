@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_eink/scrollNoWave.dart';
 
 class ListLog extends StatefulWidget {
   @override
@@ -73,39 +74,41 @@ class _ListLogState extends State<ListLog> {
         ),
         centerTitle: true,
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        separatorBuilder: (BuildContext context, int index) {
-          return Divider();
-        },
-        itemBuilder: (context, index) {
-          Map item = cityData[index];
-          return ListTile(
-            key: Key('${item['id']}'),
-            title: Row(
-              children: [
-                Text(item['name']),
-                Text(
-                  '   (${item['country']} ${item['adm1']} ${item['adm2']})',
-                  style: TextStyle(
-                    fontSize: 14,
+      body: ScrollNoWave(
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider();
+          },
+          itemBuilder: (context, index) {
+            Map item = cityData[index];
+            return ListTile(
+              key: Key('${item['id']}'),
+              title: Row(
+                children: [
+                  Text(item['name']),
+                  Text(
+                    '   (${item['country']} ${item['adm1']} ${item['adm2']})',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            onTap: () {
-              _cityChange(item);
-            },
-            trailing: IconButton(
-              icon: Icon(
-                Icons.clear,
-                color: Colors.red,
+                ],
               ),
-              onPressed: () => {_delCity(index)},
-            ),
-          );
-        },
-        itemCount: cityData.length,
+              onTap: () {
+                _cityChange(item);
+              },
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.red,
+                ),
+                onPressed: () => {_delCity(index)},
+              ),
+            );
+          },
+          itemCount: cityData.length,
+        ),
       ),
     );
   }
